@@ -30,3 +30,4 @@ Nothing else was changed.
 - The real injection also passed the security gate: see experiments/semgrep-check/.
 - A test with no assertions passed mutation testing: the build scored 82% (9 of 11
   mutants killed) against an 80% threshold, while the class it should protect scored 0%.
+- Concurrency check repeated five times each: the agent's code passed 5 of 5; the race variant failed 5 of 5.
