@@ -311,6 +311,9 @@ def run(name: str) -> list[tuple[str, str]]:
         if logs.exists():
             shutil.rmtree(logs)
         shutil.copytree(work / "target-gates", logs)
+        pit = work / "service" / "target" / "pit-reports" / "mutations.xml"
+        if pit.exists():
+            shutil.copy(pit, logs / "pit-mutations.xml")
         return re.findall(r"GATE (\S+)\s+(PASS|FAIL)", gates)
     finally:
         subprocess.run(["git", "worktree", "remove", "--force", str(work)], cwd=ROOT)

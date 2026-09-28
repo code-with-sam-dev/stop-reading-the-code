@@ -1,6 +1,6 @@
 | Variant | tests | coverage | mutation | complexity | architecture | security | dependencies | acceptance | query-budget | First thing you needed to know |
 |---|---|---|---|---|---|---|---|---|---|---|
-| calibration-no-assertions | pass | pass | pass | pass | pass | pass | pass | n/a | n/a | calibration |
+| calibration-no-assertions | pass | pass | pass | pass | pass | pass | **FAIL** | n/a | n/a | calibration |
 | calibration-untested-branch | pass | **FAIL** | **FAIL** | pass | pass | pass | pass | n/a | n/a | calibration |
 | calibration-complex-method | pass | pass | **FAIL** | **FAIL** | pass | pass | pass | n/a | n/a | calibration |
 | calibration-layering | pass | pass | **FAIL** | pass | **FAIL** | pass | pass | n/a | n/a | calibration |

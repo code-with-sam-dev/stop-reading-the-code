@@ -1,8 +1,16 @@
 Scanning dir .
 Starting filesystem walk for root: /
-Scanned /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-no-assertions-4owudoo4/service/pom.xml file and found 6 packages
-End status: 19 dirs visited, 37 inodes visited, 1 Extract calls, 1.660625ms elapsed, 1.661ms wall time
+Scanned /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-no-assertions-xn82qxxr/service/pom.xml file and found 6 packages
+End status: 19 dirs visited, 37 inodes visited, 1 Extract calls, 1.611709ms elapsed, 1.612ms wall time
 Filtered 4 local/unscannable package/s from the scan.
 Warning: enricher transitivedependency/pomxml may be risky when run on untrusted artifacts. Please ensure you trust the source code and artifacts.
 
-No issues found
+Total 1 package affected by 2 known vulnerabilities (0 Critical, 1 High, 1 Medium, 0 Low, 0 Unknown) from 1 ecosystem.
+2 vulnerabilities can be fixed.
+
++-------------------------------------+------+-----------+-------------------------------------+---------+---------------+---------+
+| OSV URL                             | CVSS | ECOSYSTEM | PACKAGE                             | VERSION | FIXED VERSION | SOURCE  |
++-------------------------------------+------+-----------+-------------------------------------+---------+---------------+---------+
+| https://osv.dev/GHSA-q4xh-88c3-wmh7 | 7.5  | Maven     | tools.jackson.core:jackson-databind | 3.1.5   | 3.1.6         | pom.xml |
+| https://osv.dev/GHSA-wjgm-6hv5-3cvf | 5.3  | Maven     | tools.jackson.core:jackson-databind | 3.1.5   | 3.1.6         | pom.xml |
++-------------------------------------+------+-----------+-------------------------------------+---------+---------------+---------+

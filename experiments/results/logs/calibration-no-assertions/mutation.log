@@ -1,19 +1,19 @@
-21:46:29 PIT >> INFO : Verbose logging is disabled. If you encounter a problem, please enable it before reporting an issue.
-21:46:29 PIT >> INFO : Created 5 mutation test units in pre scan
-21:46:29 PIT >> INFO : Sending 10 test classes to minion
-21:46:29 PIT >> INFO : Sent tests to minion
-21:46:31 PIT >> INFO : MINION : Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
-21:46:31 PIT >> INFO : MINION : WARNING: A Java agent has been loaded dynamically (/Users/developer/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
-21:46:31 PIT >> INFO : MINION : WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
-21:46:31 PIT >> INFO : MINION : WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
-21:46:31 PIT >> INFO : MINION : WARNING: Dynamic loading of agents will be disallowed by default in a future release
-21:46:31 PIT >> INFO : MINION : OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-/-\|21:46:32 PIT >> INFO : Calculated coverage in 3 seconds.
-21:46:32 PIT >> INFO : 0 tests took longer than 2000 ms
-21:46:32 PIT >> INFO : Slowest test ([engine:junit-jupiter]/[class:dev.example.payments.PaymentControllerTest]/[method:showsTheCallersOwnPayment()]) took 612 ms
-21:46:32 PIT >> INFO : Largest test ([engine:junit-jupiter]/[class:dev.example.payments.PaymentControllerTest]/[method:showsTheCallersOwnPayment()]) covered 115 blocks
-21:46:32 PIT >> INFO : Created 4 mutation test units
-/-\|21:46:47 PIT >> INFO : Completed in 17 seconds
+22:33:02 PIT >> INFO : Verbose logging is disabled. If you encounter a problem, please enable it before reporting an issue.
+22:33:03 PIT >> INFO : Created 5 mutation test units in pre scan
+22:33:03 PIT >> INFO : Sending 10 test classes to minion
+22:33:03 PIT >> INFO : Sent tests to minion
+22:33:05 PIT >> INFO : MINION : Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+22:33:05 PIT >> INFO : MINION : WARNING: A Java agent has been loaded dynamically (/Users/developer/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
+22:33:05 PIT >> INFO : MINION : WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+22:33:05 PIT >> INFO : MINION : WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+22:33:05 PIT >> INFO : MINION : WARNING: Dynamic loading of agents will be disallowed by default in a future release
+22:33:05 PIT >> INFO : MINION : OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+/-\|22:33:07 PIT >> INFO : Calculated coverage in 4 seconds.
+22:33:07 PIT >> INFO : 0 tests took longer than 2000 ms
+22:33:07 PIT >> INFO : Slowest test ([engine:junit-jupiter]/[class:dev.example.payments.PaymentControllerTest]/[method:showsTheCallersOwnPayment()]) took 681 ms
+22:33:07 PIT >> INFO : Largest test ([engine:junit-jupiter]/[class:dev.example.payments.PaymentControllerTest]/[method:showsTheCallersOwnPayment()]) covered 115 blocks
+22:33:07 PIT >> INFO : Created 4 mutation test units
+/-\|22:33:18 PIT >> INFO : Completed in 15 seconds
 ================================================================================
 - Mutators
 ================================================================================
@@ -52,14 +52,14 @@
 ================================================================================
 > pre-scan for mutations : < 1 second
 > scan classpath : < 1 second
-> coverage and dependency analysis : 3 seconds
+> coverage and dependency analysis : 4 seconds
 > build mutation tests : < 1 second
-> run mutation analysis : 14 seconds
+> run mutation analysis : 10 seconds
 --------------------------------------------------------------------------------
-> Total  : 17 seconds
+> Total  : 15 seconds
 --------------------------------------------------------------------------------
 > 0 tests took longer than 2000 ms
-> Slowest test ([engine:junit-jupiter]/[class:dev.example.payments.PaymentControllerTest]/[method:showsTheCallersOwnPayment()]) took 612 ms
+> Slowest test ([engine:junit-jupiter]/[class:dev.example.payments.PaymentControllerTest]/[method:showsTheCallersOwnPayment()]) took 681 ms
 > Largest test ([engine:junit-jupiter]/[class:dev.example.payments.PaymentControllerTest]/[method:showsTheCallersOwnPayment()]) covered 115 blocks
 ================================================================================
 - Statistics
