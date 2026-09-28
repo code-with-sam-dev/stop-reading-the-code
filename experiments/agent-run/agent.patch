@@ -1,0 +1,699 @@
+diff --git a/service/src/main/java/dev/example/payments/PaymentsApplication.java b/service/src/main/java/dev/example/payments/PaymentsApplication.java
+index dd81799..9076b8a 100644
+--- a/service/src/main/java/dev/example/payments/PaymentsApplication.java
++++ b/service/src/main/java/dev/example/payments/PaymentsApplication.java
+@@ -1,7 +1,9 @@
+ package dev.example.payments;
+ 
++import java.time.Clock;
+ import org.springframework.boot.SpringApplication;
+ import org.springframework.boot.autoconfigure.SpringBootApplication;
++import org.springframework.context.annotation.Bean;
+ 
+ @SpringBootApplication
+ public class PaymentsApplication {
+@@ -9,4 +11,9 @@ public class PaymentsApplication {
+     public static void main(String[] args) {
+         SpringApplication.run(PaymentsApplication.class, args);
+     }
++
++    @Bean
++    Clock clock() {
++        return Clock.systemUTC();
++    }
+ }
+diff --git a/service/src/main/java/dev/example/payments/refund/Refund.java b/service/src/main/java/dev/example/payments/refund/Refund.java
+new file mode 100644
+index 0000000..0f0777b
+--- /dev/null
++++ b/service/src/main/java/dev/example/payments/refund/Refund.java
+@@ -0,0 +1,15 @@
++package dev.example.payments.refund;
++
++public record Refund(
++        long id,
++        long paymentId,
++        long amountCents,
++        String status) {
++
++    public static final String PENDING = "PENDING";
++    public static final String REFUNDED = "REFUNDED";
++
++    boolean isRefunded() {
++        return REFUNDED.equals(status);
++    }
++}
+diff --git a/service/src/main/java/dev/example/payments/refund/RefundAlreadyExistsException.java b/service/src/main/java/dev/example/payments/refund/RefundAlreadyExistsException.java
+new file mode 100644
+index 0000000..7c16704
+--- /dev/null
++++ b/service/src/main/java/dev/example/payments/refund/RefundAlreadyExistsException.java
+@@ -0,0 +1,12 @@
++package dev.example.payments.refund;
++
++import org.springframework.http.HttpStatus;
++import org.springframework.web.bind.annotation.ResponseStatus;
++
++@ResponseStatus(HttpStatus.CONFLICT)
++public class RefundAlreadyExistsException extends RuntimeException {
++
++    public RefundAlreadyExistsException(String message) {
++        super(message);
++    }
++}
+diff --git a/service/src/main/java/dev/example/payments/refund/RefundController.java b/service/src/main/java/dev/example/payments/refund/RefundController.java
+new file mode 100644
+index 0000000..ea4f6b2
+--- /dev/null
++++ b/service/src/main/java/dev/example/payments/refund/RefundController.java
+@@ -0,0 +1,45 @@
++package dev.example.payments.refund;
++
++import java.util.List;
++import org.springframework.http.HttpStatus;
++import org.springframework.web.bind.annotation.GetMapping;
++import org.springframework.web.bind.annotation.PathVariable;
++import org.springframework.web.bind.annotation.PostMapping;
++import org.springframework.web.bind.annotation.RequestHeader;
++import org.springframework.web.bind.annotation.ResponseStatus;
++import org.springframework.web.bind.annotation.RestController;
++
++/**
++ * Customers are identified by the X-Customer-Id header and staff by X-Staff-Id, both
++ * set by the gateway in front of this service.
++ */
++@RestController
++public class RefundController {
++
++    private final RefundService refunds;
++
++    public RefundController(RefundService refunds) {
++        this.refunds = refunds;
++    }
++
++    @PostMapping("/payments/{paymentId}/refunds")
++    @ResponseStatus(HttpStatus.CREATED)
++    public Refund requestRefund(@RequestHeader("X-Customer-Id") long customerId, @PathVariable long paymentId) {
++        return refunds.request(customerId, paymentId);
++    }
++
++    @PostMapping("/refunds/{refundId}/approve")
++    public Refund approve(@RequestHeader("X-Staff-Id") long staffId, @PathVariable long refundId) {
++        return refunds.approve(refundId);
++    }
++
++    @GetMapping("/refunds")
++    public List<RefundDetails> myRefunds(@RequestHeader("X-Customer-Id") long customerId) {
++        return refunds.refundsOf(customerId);
++    }
++
++    @GetMapping("/refunds/{refundId}/receipt")
++    public RefundDetails receipt(@RequestHeader("X-Customer-Id") long customerId, @PathVariable long refundId) {
++        return refunds.receipt(customerId, refundId);
++    }
++}
+diff --git a/service/src/main/java/dev/example/payments/refund/RefundDetails.java b/service/src/main/java/dev/example/payments/refund/RefundDetails.java
+new file mode 100644
+index 0000000..bd9cf4a
+--- /dev/null
++++ b/service/src/main/java/dev/example/payments/refund/RefundDetails.java
+@@ -0,0 +1,10 @@
++package dev.example.payments.refund;
++
++/** A refund as its customer sees it: in the listing and on the receipt. */
++public record RefundDetails(
++        long id,
++        long paymentId,
++        String merchantName,
++        long amountCents,
++        String status) {
++}
+diff --git a/service/src/main/java/dev/example/payments/refund/RefundRepository.java b/service/src/main/java/dev/example/payments/refund/RefundRepository.java
+new file mode 100644
+index 0000000..8e15166
+--- /dev/null
++++ b/service/src/main/java/dev/example/payments/refund/RefundRepository.java
+@@ -0,0 +1,70 @@
++package dev.example.payments.refund;
++
++import java.util.List;
++import java.util.Optional;
++import org.springframework.jdbc.core.simple.JdbcClient;
++import org.springframework.stereotype.Repository;
++
++@Repository
++public class RefundRepository {
++
++    private static final String DETAILS = """
++            SELECT r.id, r.payment_id, m.name AS merchant_name, r.amount_cents, r.status
++            FROM refunds r
++            JOIN payments p ON p.id = r.payment_id
++            JOIN merchants m ON m.id = p.merchant_id
++            """;
++
++    private final JdbcClient db;
++
++    public RefundRepository(JdbcClient db) {
++        this.db = db;
++    }
++
++    /** Throws DuplicateKeyException if the payment already has a live refund. */
++    public Refund createPending(long paymentId, long amountCents) {
++        return db.sql("""
++                INSERT INTO refunds (payment_id, amount_cents, status)
++                VALUES (:payment, :amount, :status)
++                RETURNING id, payment_id, amount_cents, status""")
++                .param("payment", paymentId)
++                .param("amount", amountCents)
++                .param("status", Refund.PENDING)
++                .query(Refund.class)
++                .single();
++    }
++
++    /** Locks the refund row until the surrounding transaction ends. */
++    public Optional<Refund> findByIdForUpdate(long id) {
++        return db.sql("SELECT id, payment_id, amount_cents, status FROM refunds WHERE id = :id FOR UPDATE")
++                .param("id", id)
++                .query(Refund.class)
++                .optional();
++    }
++
++    public Refund markRefunded(long id) {
++        return db.sql("""
++                UPDATE refunds SET status = :status WHERE id = :id
++                RETURNING id, payment_id, amount_cents, status""")
++                .param("status", Refund.REFUNDED)
++                .param("id", id)
++                .query(Refund.class)
++                .single();
++    }
++
++    /** One query for the whole listing, merchant names included. */
++    public List<RefundDetails> findByCustomer(long customerId) {
++        return db.sql(DETAILS + "WHERE p.customer_id = :customer ORDER BY r.created_at DESC, r.id DESC")
++                .param("customer", customerId)
++                .query(RefundDetails.class)
++                .list();
++    }
++
++    public Optional<RefundDetails> findByIdAndCustomer(long id, long customerId) {
++        return db.sql(DETAILS + "WHERE r.id = :id AND p.customer_id = :customer")
++                .param("id", id)
++                .param("customer", customerId)
++                .query(RefundDetails.class)
++                .optional();
++    }
++}
+diff --git a/service/src/main/java/dev/example/payments/refund/RefundService.java b/service/src/main/java/dev/example/payments/refund/RefundService.java
+new file mode 100644
+index 0000000..a8f45b5
+--- /dev/null
++++ b/service/src/main/java/dev/example/payments/refund/RefundService.java
+@@ -0,0 +1,64 @@
++package dev.example.payments.refund;
++
++import dev.example.payments.payment.NotFoundException;
++import dev.example.payments.payment.Payment;
++import dev.example.payments.payment.PaymentService;
++import dev.example.payments.provider.RefundProvider;
++import java.time.Clock;
++import java.util.List;
++import org.springframework.dao.DuplicateKeyException;
++import org.springframework.stereotype.Service;
++import org.springframework.transaction.annotation.Transactional;
++
++@Service
++public class RefundService {
++
++    private final RefundRepository refunds;
++    private final PaymentService payments;
++    private final RefundProvider provider;
++    private final Clock clock;
++
++    public RefundService(RefundRepository refunds, PaymentService payments, RefundProvider provider, Clock clock) {
++        this.refunds = refunds;
++        this.payments = payments;
++        this.provider = provider;
++        this.clock = clock;
++    }
++
++    /** A customer asks for the full amount of one of their own payments back. */
++    public Refund request(long customerId, long paymentId) {
++        Payment payment = payments.paymentOf(customerId, paymentId);
++        if (!RefundWindow.isOpen(payment.method(), payment.capturedAt(), clock.instant())) {
++            throw new RefundWindowClosedException("Refund window closed for payment " + paymentId);
++        }
++        try {
++            return refunds.createPending(paymentId, payment.amountCents());
++        } catch (DuplicateKeyException e) {
++            throw new RefundAlreadyExistsException("Payment " + paymentId + " already has a refund");
++        }
++    }
++
++    /**
++     * Pays the refund out. The row lock makes concurrent approvals of the same refund
++     * queue up; whoever comes second finds it REFUNDED and leaves the provider alone.
++     */
++    @Transactional
++    public Refund approve(long refundId) {
++        Refund refund = refunds.findByIdForUpdate(refundId)
++                .orElseThrow(() -> new NotFoundException("No refund " + refundId));
++        if (refund.isRefunded()) {
++            return refund;
++        }
++        provider.refund(refund.paymentId(), refund.amountCents());
++        return refunds.markRefunded(refundId);
++    }
++
++    public List<RefundDetails> refundsOf(long customerId) {
++        return refunds.findByCustomer(customerId);
++    }
++
++    public RefundDetails receipt(long customerId, long refundId) {
++        return refunds.findByIdAndCustomer(refundId, customerId)
++                .orElseThrow(() -> new NotFoundException("No refund " + refundId));
++    }
++}
+diff --git a/service/src/main/java/dev/example/payments/refund/RefundWindow.java b/service/src/main/java/dev/example/payments/refund/RefundWindow.java
+new file mode 100644
+index 0000000..c0b004c
+--- /dev/null
++++ b/service/src/main/java/dev/example/payments/refund/RefundWindow.java
+@@ -0,0 +1,35 @@
++package dev.example.payments.refund;
++
++import java.time.Instant;
++import java.time.LocalDate;
++import java.time.ZoneOffset;
++
++/**
++ * How long after capture a payment can be refunded, by payment method. The window
++ * counts calendar days (UTC), and the last day is inside it.
++ */
++final class RefundWindow {
++
++    static final int CARD_DAYS = 14;
++    static final int BANK_TRANSFER_DAYS = 30;
++
++    private RefundWindow() {
++    }
++
++    static int daysFor(String method) {
++        return switch (method) {
++            case "CARD" -> CARD_DAYS;
++            case "BANK_TRANSFER" -> BANK_TRANSFER_DAYS;
++            default -> throw new IllegalArgumentException("Unknown payment method " + method);
++        };
++    }
++
++    static boolean isOpen(String method, Instant capturedAt, Instant now) {
++        LocalDate lastDay = day(capturedAt).plusDays(daysFor(method));
++        return !day(now).isAfter(lastDay);
++    }
++
++    private static LocalDate day(Instant instant) {
++        return LocalDate.ofInstant(instant, ZoneOffset.UTC);
++    }
++}
+diff --git a/service/src/main/java/dev/example/payments/refund/RefundWindowClosedException.java b/service/src/main/java/dev/example/payments/refund/RefundWindowClosedException.java
+new file mode 100644
+index 0000000..75ea6d0
+--- /dev/null
++++ b/service/src/main/java/dev/example/payments/refund/RefundWindowClosedException.java
+@@ -0,0 +1,12 @@
++package dev.example.payments.refund;
++
++import org.springframework.http.HttpStatus;
++import org.springframework.web.bind.annotation.ResponseStatus;
++
++@ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
++public class RefundWindowClosedException extends RuntimeException {
++
++    public RefundWindowClosedException(String message) {
++        super(message);
++    }
++}
+diff --git a/service/src/main/resources/schema.sql b/service/src/main/resources/schema.sql
+index f034045..bfd1272 100644
+--- a/service/src/main/resources/schema.sql
++++ b/service/src/main/resources/schema.sql
+@@ -19,3 +19,17 @@ CREATE TABLE IF NOT EXISTS provider_calls (
+     amount_cents BIGINT NOT NULL,
+     called_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+ );
++
++CREATE TABLE IF NOT EXISTS refunds (
++    id           BIGSERIAL PRIMARY KEY,
++    payment_id   BIGINT NOT NULL REFERENCES payments (id),
++    amount_cents BIGINT NOT NULL CHECK (amount_cents > 0),
++    status       TEXT NOT NULL CHECK (status IN ('PENDING', 'REFUNDED')),
++    created_at   TIMESTAMPTZ NOT NULL DEFAULT clock_timestamp()
++);
++
++-- At most one live refund per payment, even when two requests race.
++CREATE UNIQUE INDEX IF NOT EXISTS refunds_one_live_per_payment
++    ON refunds (payment_id) WHERE status IN ('PENDING', 'REFUNDED');
++
++CREATE INDEX IF NOT EXISTS payments_by_customer ON payments (customer_id);
+diff --git a/service/src/test/java/dev/example/payments/RefundControllerTest.java b/service/src/test/java/dev/example/payments/RefundControllerTest.java
+new file mode 100644
+index 0000000..f4ba8f7
+--- /dev/null
++++ b/service/src/test/java/dev/example/payments/RefundControllerTest.java
+@@ -0,0 +1,279 @@
++package dev.example.payments;
++
++import static org.assertj.core.api.Assertions.assertThat;
++import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
++import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
++import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
++import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
++
++import com.jayway.jsonpath.JsonPath;
++import dev.example.payments.refund.Refund;
++import dev.example.payments.refund.RefundAlreadyExistsException;
++import dev.example.payments.refund.RefundService;
++import java.time.Duration;
++import java.util.ArrayList;
++import java.util.List;
++import java.util.concurrent.Callable;
++import java.util.concurrent.CountDownLatch;
++import java.util.concurrent.ExecutionException;
++import java.util.concurrent.ExecutorService;
++import java.util.concurrent.Executors;
++import java.util.concurrent.Future;
++import javax.sql.DataSource;
++import net.ttddyy.dsproxy.QueryCountHolder;
++import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
++import org.junit.jupiter.api.BeforeEach;
++import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.beans.factory.config.BeanPostProcessor;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.boot.test.context.TestConfiguration;
++import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
++import org.springframework.context.annotation.Bean;
++import org.springframework.jdbc.core.simple.JdbcClient;
++import org.springframework.test.web.servlet.MockMvc;
++import org.springframework.test.web.servlet.ResultActions;
++
++@SpringBootTest
++@AutoConfigureMockMvc
++class RefundControllerTest {
++
++    /** Counts every statement sent to the database, so the listing's query budget can be checked. */
++    @TestConfiguration
++    static class CountQueries {
++        @Bean
++        static BeanPostProcessor countingDataSource() {
++            return new BeanPostProcessor() {
++                @Override
++                public Object postProcessAfterInitialization(Object bean, String name) {
++                    return bean instanceof DataSource ds ? ProxyDataSourceBuilder.create(ds).countQuery().build() : bean;
++                }
++            };
++        }
++    }
++
++    static final long ALICE = 100;
++    static final long BOB = 200;
++
++    @Autowired MockMvc http;
++    @Autowired JdbcClient db;
++    @Autowired RefundService service;
++    Fixtures data;
++
++    @BeforeEach
++    void setUp() {
++        data = new Fixtures(db);
++        data.reset();
++        data.merchant(1, "Coffee Co");
++        data.merchant(2, "Book Barn");
++        data.payment(10, ALICE, 1, "CARD", 450, Duration.ofDays(2));
++        data.payment(11, BOB, 1, "CARD", 900, Duration.ofDays(1));
++        data.payment(12, ALICE, 2, "BANK_TRANSFER", 2500, Duration.ofDays(20));
++    }
++
++    ResultActions requestRefund(long customer, long payment) throws Exception {
++        return http.perform(post("/payments/{id}/refunds", payment).header("X-Customer-Id", customer));
++    }
++
++    ResultActions approve(long refund) throws Exception {
++        return http.perform(post("/refunds/{id}/approve", refund).header("X-Staff-Id", 7));
++    }
++
++    long refundId(long customer, long payment) throws Exception {
++        String body = requestRefund(customer, payment).andReturn().getResponse().getContentAsString();
++        return ((Number) JsonPath.read(body, "$.id")).longValue();
++    }
++
++    int refundCount() {
++        return db.sql("SELECT count(*) FROM refunds").query(Integer.class).single();
++    }
++
++    // 1. A customer asks for a refund
++
++    @Test
++    void refundIsPendingForTheFullAmount() throws Exception {
++        requestRefund(ALICE, 10)
++                .andExpect(status().isCreated())
++                .andExpect(jsonPath("$.id").isNumber())
++                .andExpect(jsonPath("$.paymentId").value(10))
++                .andExpect(jsonPath("$.amountCents").value(450))
++                .andExpect(jsonPath("$.status").value("PENDING"));
++        assertThat(data.providerCalls()).isZero();
++    }
++
++    @Test
++    void anotherCustomersPaymentIsNotFound() throws Exception {
++        requestRefund(ALICE, 11).andExpect(status().isNotFound());
++        requestRefund(ALICE, 999).andExpect(status().isNotFound());
++        assertThat(refundCount()).isZero();
++    }
++
++    @Test
++    void cardCanBeRefundedOnDay14ButNotDay15() throws Exception {
++        data.payment(20, ALICE, 1, "CARD", 100, Duration.ofDays(14));
++        data.payment(21, ALICE, 1, "CARD", 100, Duration.ofDays(15));
++        requestRefund(ALICE, 20).andExpect(status().isCreated());
++        requestRefund(ALICE, 21).andExpect(status().isUnprocessableContent());
++        assertThat(refundCount()).isEqualTo(1);
++    }
++
++    @Test
++    void bankTransferCanBeRefundedOnDay30ButNotDay31() throws Exception {
++        data.payment(30, ALICE, 1, "BANK_TRANSFER", 100, Duration.ofDays(30));
++        data.payment(31, ALICE, 1, "BANK_TRANSFER", 100, Duration.ofDays(31));
++        requestRefund(ALICE, 12).andExpect(status().isCreated());
++        requestRefund(ALICE, 30).andExpect(status().isCreated());
++        requestRefund(ALICE, 31).andExpect(status().isUnprocessableContent());
++        assertThat(refundCount()).isEqualTo(2);
++    }
++
++    @Test
++    void secondRefundForTheSamePaymentConflicts() throws Exception {
++        requestRefund(ALICE, 10).andExpect(status().isCreated());
++        requestRefund(ALICE, 10).andExpect(status().isConflict());
++        approve(refundId(ALICE, 12)).andExpect(status().isOk());
++        requestRefund(ALICE, 12).andExpect(status().isConflict());
++        assertThat(refundCount()).isEqualTo(2);
++    }
++
++    @Test
++    void simultaneousRequestsCreateOneRefund() throws Exception {
++        List<Future<Refund>> results = race(() -> service.request(ALICE, 10));
++        int created = 0;
++        int conflicts = 0;
++        for (Future<Refund> result : results) {
++            try {
++                result.get();
++                created++;
++            } catch (ExecutionException e) {
++                assertThat(e.getCause()).isInstanceOf(RefundAlreadyExistsException.class);
++                conflicts++;
++            }
++        }
++        assertThat(created).isEqualTo(1);
++        assertThat(conflicts).isEqualTo(results.size() - 1);
++        assertThat(refundCount()).isEqualTo(1);
++    }
++
++    // 2. Staff approve a refund
++
++    @Test
++    void approvingPaysOutAndMarksRefunded() throws Exception {
++        long id = refundId(ALICE, 10);
++        approve(id)
++                .andExpect(status().isOk())
++                .andExpect(jsonPath("$.id").value(id))
++                .andExpect(jsonPath("$.paymentId").value(10))
++                .andExpect(jsonPath("$.amountCents").value(450))
++                .andExpect(jsonPath("$.status").value("REFUNDED"));
++        assertThat(data.providerCalls()).isEqualTo(1);
++        assertThat(db.sql("SELECT payment_id FROM provider_calls").query(Long.class).single()).isEqualTo(10L);
++        assertThat(db.sql("SELECT amount_cents FROM provider_calls").query(Long.class).single()).isEqualTo(450L);
++    }
++
++    @Test
++    void approvingTwiceMovesMoneyOnce() throws Exception {
++        long id = refundId(ALICE, 10);
++        approve(id).andExpect(status().isOk());
++        approve(id)
++                .andExpect(status().isOk())
++                .andExpect(jsonPath("$.status").value("REFUNDED"));
++        assertThat(data.providerCalls()).isEqualTo(1);
++    }
++
++    @Test
++    void simultaneousApprovalsMoveMoneyOnce() throws Exception {
++        long id = refundId(ALICE, 10);
++        for (Future<Refund> result : race(() -> service.approve(id))) {
++            assertThat(result.get().status()).isEqualTo("REFUNDED");
++        }
++        assertThat(data.providerCalls()).isEqualTo(1);
++    }
++
++    @Test
++    void approvingAnUnknownRefundIsNotFound() throws Exception {
++        approve(999).andExpect(status().isNotFound());
++        assertThat(data.providerCalls()).isZero();
++    }
++
++    @Test
++    void approvingNeedsStaff() throws Exception {
++        long id = refundId(ALICE, 10);
++        http.perform(post("/refunds/{id}/approve", id).header("X-Customer-Id", ALICE))
++                .andExpect(status().isBadRequest());
++        assertThat(data.providerCalls()).isZero();
++    }
++
++    // 3. A customer lists their refunds
++
++    @Test
++    void listsOnlyTheCallersRefundsNewestFirstWithMerchant() throws Exception {
++        long older = refundId(ALICE, 10);
++        long newer = refundId(ALICE, 12);
++        refundId(BOB, 11);
++        http.perform(get("/refunds").header("X-Customer-Id", ALICE))
++                .andExpect(status().isOk())
++                .andExpect(jsonPath("$.length()").value(2))
++                .andExpect(jsonPath("$[0].id").value(newer))
++                .andExpect(jsonPath("$[0].paymentId").value(12))
++                .andExpect(jsonPath("$[0].merchantName").value("Book Barn"))
++                .andExpect(jsonPath("$[0].amountCents").value(2500))
++                .andExpect(jsonPath("$[0].status").value("PENDING"))
++                .andExpect(jsonPath("$[1].id").value(older))
++                .andExpect(jsonPath("$[1].merchantName").value("Coffee Co"));
++    }
++
++    @Test
++    void listingUsesOneQueryHoweverManyRefunds() throws Exception {
++        for (long p = 100; p < 150; p++) {
++            data.payment(p, ALICE, 1 + p % 2, "CARD", 100, Duration.ofDays(1));
++            refundId(ALICE, p);
++        }
++        QueryCountHolder.clear();
++        http.perform(get("/refunds").header("X-Customer-Id", ALICE))
++                .andExpect(status().isOk())
++                .andExpect(jsonPath("$.length()").value(50));
++        assertThat(QueryCountHolder.getGrandTotal().getTotal()).isEqualTo(1);
++    }
++
++    // 4. A customer downloads a refund receipt
++
++    @Test
++    void receiptShowsTheRefund() throws Exception {
++        long id = refundId(ALICE, 10);
++        approve(id);
++        http.perform(get("/refunds/{id}/receipt", id).header("X-Customer-Id", ALICE))
++                .andExpect(status().isOk())
++                .andExpect(jsonPath("$.id").value(id))
++                .andExpect(jsonPath("$.paymentId").value(10))
++                .andExpect(jsonPath("$.merchantName").value("Coffee Co"))
++                .andExpect(jsonPath("$.amountCents").value(450))
++                .andExpect(jsonPath("$.status").value("REFUNDED"));
++    }
++
++    @Test
++    void anotherCustomersReceiptIsNotFound() throws Exception {
++        long id = refundId(BOB, 11);
++        http.perform(get("/refunds/{id}/receipt", id).header("X-Customer-Id", ALICE))
++                .andExpect(status().isNotFound());
++        http.perform(get("/refunds/{id}/receipt", 999).header("X-Customer-Id", ALICE))
++                .andExpect(status().isNotFound());
++    }
++
++    /** Runs the same call on several threads, released together. */
++    static <T> List<Future<T>> race(Callable<T> call) throws InterruptedException {
++        int threads = 4;
++        CountDownLatch start = new CountDownLatch(1);
++        List<Future<T>> results = new ArrayList<>();
++        try (ExecutorService pool = Executors.newFixedThreadPool(threads)) {
++            for (int i = 0; i < threads; i++) {
++                results.add(pool.submit(() -> {
++                    start.await();
++                    return call.call();
++                }));
++            }
++            start.countDown();
++        }
++        return results;
++    }
++}
+diff --git a/service/src/test/java/dev/example/payments/refund/RefundWindowTest.java b/service/src/test/java/dev/example/payments/refund/RefundWindowTest.java
+new file mode 100644
+index 0000000..88b43c6
+--- /dev/null
++++ b/service/src/test/java/dev/example/payments/refund/RefundWindowTest.java
+@@ -0,0 +1,51 @@
++package dev.example.payments.refund;
++
++import static org.assertj.core.api.Assertions.assertThat;
++import static org.assertj.core.api.Assertions.assertThatThrownBy;
++
++import java.time.Duration;
++import java.time.Instant;
++import org.junit.jupiter.api.Test;
++
++class RefundWindowTest {
++
++    static final Instant CAPTURED = Instant.parse("2026-03-01T10:00:00Z");
++
++    static Instant daysLater(int days) {
++        return CAPTURED.plus(Duration.ofDays(days));
++    }
++
++    @Test
++    void cardIsOpenUpToAndIncludingDay14() {
++        assertThat(RefundWindow.isOpen("CARD", CAPTURED, CAPTURED)).isTrue();
++        assertThat(RefundWindow.isOpen("CARD", CAPTURED, daysLater(14))).isTrue();
++        assertThat(RefundWindow.isOpen("CARD", CAPTURED, daysLater(15))).isFalse();
++    }
++
++    @Test
++    void bankTransferIsOpenUpToAndIncludingDay30() {
++        assertThat(RefundWindow.isOpen("BANK_TRANSFER", CAPTURED, daysLater(30))).isTrue();
++        assertThat(RefundWindow.isOpen("BANK_TRANSFER", CAPTURED, daysLater(31))).isFalse();
++    }
++
++    @Test
++    void theWholeLastDayCounts() {
++        Instant lastMomentOfDay14 = Instant.parse("2026-03-15T23:59:59Z");
++        Instant firstMomentOfDay15 = Instant.parse("2026-03-16T00:00:00Z");
++        assertThat(RefundWindow.isOpen("CARD", CAPTURED, lastMomentOfDay14)).isTrue();
++        assertThat(RefundWindow.isOpen("CARD", CAPTURED, firstMomentOfDay15)).isFalse();
++    }
++
++    @Test
++    void daysPerMethod() {
++        assertThat(RefundWindow.daysFor("CARD")).isEqualTo(14);
++        assertThat(RefundWindow.daysFor("BANK_TRANSFER")).isEqualTo(30);
++    }
++
++    @Test
++    void unknownMethodIsRejected() {
++        assertThatThrownBy(() -> RefundWindow.daysFor("CASH"))
++                .isInstanceOf(IllegalArgumentException.class)
++                .hasMessageContaining("CASH");
++    }
++}
