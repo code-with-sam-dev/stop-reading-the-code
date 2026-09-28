@@ -9,7 +9,7 @@ dependencies, and the hidden acceptance tests (12 of 12) and query budget it nev
 
 ## What reading the code surfaced that no gate expresses
 
-1. The provider is called inside the database transaction, with the refund row locked.
+1. The provider is called inside the database transaction, with the refund row locked. REPRODUCED: see experiments/fault-injection (one refund, two payouts).
    If the provider pays out and the commit then fails, the refund is still PENDING and
    the next approval pays again. The lock is also held for the whole network call.
 2. The approval endpoint takes the staff id and never uses it. The spec did not ask for
