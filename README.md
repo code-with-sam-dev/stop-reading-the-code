@@ -20,8 +20,11 @@ testing. This repository tests that idea on a real feature.
 
 ## Review it blind first
 
-Before you read the results, try being the reviewer. Check out the `agent-run` branch,
-read `spec/refunds.md`, and review the change the agent made (`git diff baseline`).
+Before you read the results, try being the reviewer. Read `spec/refunds.md`, then review
+exactly what the agent changed:
+
+    git diff baseline agent-change -- service
+
 Write down anything you would block. Then look at `experiments/agent-run/findings.md`.
 
 The planted variants are separate: each one's diff is in `experiments/variants/`.
