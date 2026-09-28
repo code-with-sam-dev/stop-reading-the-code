@@ -31,3 +31,12 @@ Nothing else was changed.
 - A test with no assertions passed mutation testing: the build scored 82% (9 of 11
   mutants killed) against an 80% threshold, while the class it should protect scored 0%.
 - Concurrency check repeated five times each: the agent's code passed 5 of 5; the race variant failed 5 of 5.
+
+## The dependency gate changed its mind overnight
+
+`results/agent-run-at-the-time.txt` is the agent's own gate run, copied from its
+transcript (t=285s): all seven visible gates PASS. Re-running the same code that evening
+(`results/agent-run-rerun-evening.txt`), the dependency gate FAILED: two advisories on
+jackson-databind 3.1.5, the version Spring Boot 4.1.1 ships (GHSA-q4xh-88c3-wmh7, 7.5;
+GHSA-wjgm-6hv5-3cvf, 5.3; fixed in 3.1.6), published after the afternoon run. No code
+changed. A dependency gate measures the world, not only the code.

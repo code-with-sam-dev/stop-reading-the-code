@@ -1,0 +1,7 @@
+GATE tests          PASS
+GATE coverage       PASS
+GATE mutation       PASS
+GATE complexity     PASS
+GATE architecture   PASS
+GATE security       PASS
+GATE dependencies   PASS
