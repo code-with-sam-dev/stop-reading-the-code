@@ -2,3 +2,5 @@ target/
 target-gates/
 .idea/
 *.iml
+!scripts/
+!docs/
