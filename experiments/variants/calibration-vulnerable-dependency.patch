@@ -1,0 +1,13 @@
+diff --git a/service/pom.xml b/service/pom.xml
+index 311dc1f..c9c7ad3 100644
+--- a/service/pom.xml
++++ b/service/pom.xml
+@@ -17,7 +17,7 @@
+ 		<!-- Spring Boot 4.1.1 ships Tomcat 11.0.24, which has three critical advisories
+ 		     (GHSA-9xv2-5v5q-p794, GHSA-gcx9-497g-6cp6, GHSA-h3x4-894j-xpx5). The
+ 		     dependency gate caught it on the empty baseline. -->
+-		<tomcat.version>11.0.26</tomcat.version>
++		<tomcat.version>11.0.24</tomcat.version>
+ 		<!-- The quality gates. Each one is a number a change has to clear. -->
+ 		<gate.line-coverage>0.90</gate.line-coverage>
+ 		<gate.branch-coverage>0.85</gate.branch-coverage>

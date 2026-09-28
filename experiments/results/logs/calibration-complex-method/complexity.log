@@ -1,0 +1,7 @@
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-pmd-plugin:3.28.0:check (default-cli) on project payments: PMD 7.17.0 has found 1 violation. For more details see: /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-complex-method-8esoip5g/service/target/pmd.xml -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

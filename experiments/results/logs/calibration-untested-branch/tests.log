@@ -1,0 +1,49 @@
+21:48:30.996 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [dev.example.payments.RecordingRefundProviderTest]: RecordingRefundProviderTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:48:31.089 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration dev.example.payments.PaymentsApplication for test class dev.example.payments.RecordingRefundProviderTest
+21:48:31.172 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [dev.example.payments.RecordingRefundProviderTest]: RecordingRefundProviderTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:48:31.174 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration dev.example.payments.PaymentsApplication for test class dev.example.payments.RecordingRefundProviderTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-09-28T21:48:31.458+02:00  INFO 44092 --- [payments] [           main] d.e.p.RecordingRefundProviderTest        : Starting RecordingRefundProviderTest using Java 25.0.4 with PID 44092 (started by developer in /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-untested-branch-epttuknd/service)
+2026-09-28T21:48:31.459+02:00  INFO 44092 --- [payments] [           main] d.e.p.RecordingRefundProviderTest        : No active profile set, falling back to 1 default profile: "default"
+2026-09-28T21:48:32.137+02:00  INFO 44092 --- [payments] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-28T21:48:32.378+02:00  INFO 44092 --- [payments] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4fd8aefe
+2026-09-28T21:48:32.379+02:00  INFO 44092 --- [payments] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-28T21:48:32.837+02:00  INFO 44092 --- [payments] [           main] d.e.p.RecordingRefundProviderTest        : Started RecordingRefundProviderTest in 1.602 seconds (process running for 2.968)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/Users/developer/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+2026-09-28T21:48:33.655+02:00  INFO 44092 --- [payments] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [dev.example.payments.PaymentControllerTest]: PaymentControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-28T21:48:33.664+02:00  INFO 44092 --- [payments] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration dev.example.payments.PaymentsApplication for test class dev.example.payments.PaymentControllerTest
+2026-09-28T21:48:33.667+02:00  INFO 44092 --- [payments] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [dev.example.payments.PaymentControllerTest]: PaymentControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-28T21:48:33.670+02:00  INFO 44092 --- [payments] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration dev.example.payments.PaymentsApplication for test class dev.example.payments.PaymentControllerTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-09-28T21:48:33.698+02:00  INFO 44092 --- [payments] [           main] d.e.payments.PaymentControllerTest       : Starting PaymentControllerTest using Java 25.0.4 with PID 44092 (started by developer in /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-untested-branch-epttuknd/service)
+2026-09-28T21:48:33.698+02:00  INFO 44092 --- [payments] [           main] d.e.payments.PaymentControllerTest       : No active profile set, falling back to 1 default profile: "default"
+2026-09-28T21:48:33.841+02:00  INFO 44092 --- [payments] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-09-28T21:48:33.858+02:00  INFO 44092 --- [payments] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@11d59d0
+2026-09-28T21:48:33.859+02:00  INFO 44092 --- [payments] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-09-28T21:48:33.941+02:00  INFO 44092 --- [payments] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-28T21:48:33.941+02:00  INFO 44092 --- [payments] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-28T21:48:33.943+02:00  INFO 44092 --- [payments] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-09-28T21:48:33.951+02:00  INFO 44092 --- [payments] [           main] d.e.payments.PaymentControllerTest       : Started PaymentControllerTest in 0.277 seconds (process running for 4.082)

@@ -1,0 +1,23 @@
+diff --git a/service/src/main/java/dev/example/payments/payment/PaymentController.java b/service/src/main/java/dev/example/payments/payment/PaymentController.java
+index 14f458d..5dfde8f 100644
+--- a/service/src/main/java/dev/example/payments/payment/PaymentController.java
++++ b/service/src/main/java/dev/example/payments/payment/PaymentController.java
+@@ -11,14 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
+ public class PaymentController {
+ 
+     private final PaymentService payments;
++    private final PaymentRepository repository;
+ 
+-    public PaymentController(PaymentService payments) {
++    public PaymentController(PaymentService payments, PaymentRepository repository) {
+         this.payments = payments;
++        this.repository = repository;
+     }
+ 
+     @GetMapping("/payments")
+     public List<Payment> myPayments(@RequestHeader("X-Customer-Id") long customerId) {
+-        return payments.paymentsOf(customerId);
++        return repository.findByCustomer(customerId);
+     }
+ 
+     @GetMapping("/payments/{id}")

@@ -21,3 +21,12 @@ Neither is a failure against the spec. Both are the kind of concern a reviewer r
 
 In transcript.jsonl the home directory in the session's opening event is written as `~`.
 Nothing else was changed.
+
+## Calibration notes
+
+- The first `calibration-sql-from-input` concatenated a `long` into SQL, which cannot
+  carry an injection; Semgrep was right to pass it. It was replaced by a real injection
+  (a request parameter pasted into ORDER BY). The first run stays in results/run.log.
+- The real injection also passed the security gate: see experiments/semgrep-check/.
+- A test with no assertions passed mutation testing: the build scored 82% (9 of 11
+  mutants killed) against an 80% threshold, while the class it should protect scored 0%.

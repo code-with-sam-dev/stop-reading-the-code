@@ -1,0 +1,48 @@
+diff --git a/service/src/main/java/dev/example/payments/payment/PaymentController.java b/service/src/main/java/dev/example/payments/payment/PaymentController.java
+index 14f458d..1bd711e 100644
+--- a/service/src/main/java/dev/example/payments/payment/PaymentController.java
++++ b/service/src/main/java/dev/example/payments/payment/PaymentController.java
+@@ -17,8 +17,9 @@ public class PaymentController {
+     }
+ 
+     @GetMapping("/payments")
+-    public List<Payment> myPayments(@RequestHeader("X-Customer-Id") long customerId) {
+-        return payments.paymentsOf(customerId);
++    public List<Payment> myPayments(@RequestHeader("X-Customer-Id") long customerId,
++                                    @org.springframework.web.bind.annotation.RequestParam(defaultValue = "captured_at DESC") String sort) {
++        return payments.paymentsOf(customerId, sort);
+     }
+ 
+     @GetMapping("/payments/{id}")
+diff --git a/service/src/main/java/dev/example/payments/payment/PaymentRepository.java b/service/src/main/java/dev/example/payments/payment/PaymentRepository.java
+index 6df82f7..4b23b22 100644
+--- a/service/src/main/java/dev/example/payments/payment/PaymentRepository.java
++++ b/service/src/main/java/dev/example/payments/payment/PaymentRepository.java
+@@ -22,7 +22,11 @@ public class PaymentRepository {
+     }
+ 
+     public List<Payment> findByCustomer(long customerId) {
+-        return db.sql("SELECT * FROM payments WHERE customer_id = :customer ORDER BY captured_at DESC")
++        return findByCustomer(customerId, "captured_at DESC");
++    }
++
++    public List<Payment> findByCustomer(long customerId, String sort) {
++        return db.sql("SELECT * FROM payments WHERE customer_id = :customer ORDER BY " + sort)
+                 .param("customer", customerId)
+                 .query(Payment.class)
+                 .list();
+diff --git a/service/src/main/java/dev/example/payments/payment/PaymentService.java b/service/src/main/java/dev/example/payments/payment/PaymentService.java
+index ddf5ecf..f5d8179 100644
+--- a/service/src/main/java/dev/example/payments/payment/PaymentService.java
++++ b/service/src/main/java/dev/example/payments/payment/PaymentService.java
+@@ -16,6 +16,10 @@ public class PaymentService {
+         return payments.findByCustomer(customerId);
+     }
+ 
++    public List<Payment> paymentsOf(long customerId, String sort) {
++        return payments.findByCustomer(customerId, sort);
++    }
++
+     /** A payment is only visible to the customer who made it. */
+     public Payment paymentOf(long customerId, long paymentId) {
+         return payments.findById(paymentId)

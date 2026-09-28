@@ -1,0 +1,14 @@
+diff --git a/service/src/main/java/dev/example/payments/payment/PaymentService.java b/service/src/main/java/dev/example/payments/payment/PaymentService.java
+index ddf5ecf..6653512 100644
+--- a/service/src/main/java/dev/example/payments/payment/PaymentService.java
++++ b/service/src/main/java/dev/example/payments/payment/PaymentService.java
+@@ -13,6 +13,9 @@ public class PaymentService {
+     }
+ 
+     public List<Payment> paymentsOf(long customerId) {
++        if (customerId <= 0) {
++            throw new NotFoundException("No customer " + customerId);
++        }
+         return payments.findByCustomer(customerId);
+     }
+ 

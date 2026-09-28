@@ -1,0 +1,34 @@
+21:53:01.352 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 25.0.4
+[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.742 s <<< FAILURE! -- in dev.example.payments.ArchitectureTest
+[ERROR] dev.example.payments.ArchitectureTest.controllersDoNotReachRepositories -- Time elapsed: 0.691 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'no classes that are annotated with @RestController should depend on classes that are annotated with @Repository' was violated (3 times):
+Constructor <dev.example.payments.payment.PaymentController.<init>(dev.example.payments.payment.PaymentService, dev.example.payments.payment.PaymentRepository)> has parameter of type <dev.example.payments.payment.PaymentRepository> in (PaymentController.java:0)
+Field <dev.example.payments.payment.PaymentController.repository> has type <dev.example.payments.payment.PaymentRepository> in (PaymentController.java:0)
+Method <dev.example.payments.payment.PaymentController.myPayments(long)> calls method <dev.example.payments.payment.PaymentRepository.findByCustomer(long)> in (PaymentController.java:23)
+	at com.tngtech.archunit.lang.ArchRule$Assertions.assertNoViolation(ArchRule.java:94)
+	at com.tngtech.archunit.lang.ArchRule$Assertions.check(ArchRule.java:86)
+	at com.tngtech.archunit.lang.ArchRule$Factory$SimpleArchRule.check(ArchRule.java:165)
+	at com.tngtech.archunit.lang.syntax.ObjectsShouldInternal.check(ObjectsShouldInternal.java:81)
+	at com.tngtech.archunit.junit.internal.ArchUnitTestDescriptor$ArchUnitRuleDescriptor.execute(ArchUnitTestDescriptor.java:168)
+	at com.tngtech.archunit.junit.internal.ArchUnitTestDescriptor$ArchUnitRuleDescriptor.execute(ArchUnitTestDescriptor.java:151)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] Failures: 
+[ERROR]   ArchitectureTest.controllersDoNotReachRepositories Architecture Violation [Priority: MEDIUM] - Rule 'no classes that are annotated with @RestController should depend on classes that are annotated with @Repository' was violated (3 times):
+Constructor <dev.example.payments.payment.PaymentController.<init>(dev.example.payments.payment.PaymentService, dev.example.payments.payment.PaymentRepository)> has parameter of type <dev.example.payments.payment.PaymentRepository> in (PaymentController.java:0)
+Field <dev.example.payments.payment.PaymentController.repository> has type <dev.example.payments.payment.PaymentRepository> in (PaymentController.java:0)
+Method <dev.example.payments.payment.PaymentController.myPayments(long)> calls method <dev.example.payments.payment.PaymentRepository.findByCustomer(long)> in (PaymentController.java:23)
+[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project payments: There are test failures.
+[ERROR] 
+[ERROR] See /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-layering-1coyv6qg/service/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

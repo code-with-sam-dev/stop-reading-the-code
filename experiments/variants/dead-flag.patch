@@ -1,0 +1,74 @@
+diff --git a/service/src/main/java/dev/example/payments/refund/RefundService.java b/service/src/main/java/dev/example/payments/refund/RefundService.java
+index a8f45b5..9678eef 100644
+--- a/service/src/main/java/dev/example/payments/refund/RefundService.java
++++ b/service/src/main/java/dev/example/payments/refund/RefundService.java
+@@ -6,6 +6,7 @@ import dev.example.payments.payment.PaymentService;
+ import dev.example.payments.provider.RefundProvider;
+ import java.time.Clock;
+ import java.util.List;
++import org.springframework.beans.factory.annotation.Value;
+ import org.springframework.dao.DuplicateKeyException;
+ import org.springframework.stereotype.Service;
+ import org.springframework.transaction.annotation.Transactional;
+@@ -17,12 +18,15 @@ public class RefundService {
+     private final PaymentService payments;
+     private final RefundProvider provider;
+     private final Clock clock;
++    private final boolean legacyApproval;
+ 
+-    public RefundService(RefundRepository refunds, PaymentService payments, RefundProvider provider, Clock clock) {
++    public RefundService(RefundRepository refunds, PaymentService payments, RefundProvider provider, Clock clock,
++                         @Value("${refunds.legacy-approval:false}") boolean legacyApproval) {
+         this.refunds = refunds;
+         this.payments = payments;
+         this.provider = provider;
+         this.clock = clock;
++        this.legacyApproval = legacyApproval;
+     }
+ 
+     /** A customer asks for the full amount of one of their own payments back. */
+@@ -46,6 +50,10 @@ public class RefundService {
+     public Refund approve(long refundId) {
+         Refund refund = refunds.findByIdForUpdate(refundId)
+                 .orElseThrow(() -> new NotFoundException("No refund " + refundId));
++        if (legacyApproval) {
++            provider.refund(refund.paymentId(), refund.amountCents());
++            return refunds.markRefunded(refundId);
++        }
+         if (refund.isRefunded()) {
+             return refund;
+         }
+diff --git a/service/src/test/java/dev/example/payments/LegacyApprovalTest.java b/service/src/test/java/dev/example/payments/LegacyApprovalTest.java
+new file mode 100644
+index 0000000..9a616cc
+--- /dev/null
++++ b/service/src/test/java/dev/example/payments/LegacyApprovalTest.java
+@@ -0,0 +1,28 @@
++package dev.example.payments;
++
++import static org.assertj.core.api.Assertions.assertThat;
++
++import dev.example.payments.refund.RefundService;
++import java.time.Duration;
++import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.jdbc.core.simple.JdbcClient;
++
++@SpringBootTest(properties = "refunds.legacy-approval=true")
++class LegacyApprovalTest {
++
++    @Autowired RefundService service;
++    @Autowired JdbcClient db;
++
++    @Test
++    void legacyApprovalPaysOut() {
++        Fixtures data = new Fixtures(db);
++        data.reset();
++        data.merchant(1, "Coffee Co");
++        data.payment(10, 100, 1, "CARD", 450, Duration.ofDays(1));
++        long id = service.request(100, 10).id();
++        assertThat(service.approve(id).status()).isEqualTo("REFUNDED");
++        assertThat(data.providerCalls()).isEqualTo(1);
++    }
++}

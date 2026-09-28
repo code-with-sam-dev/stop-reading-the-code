@@ -1,0 +1,58 @@
+21:50:21.750 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [dev.example.payments.acceptance.RefundAcceptanceTest]: RefundAcceptanceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:50:21.829 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration dev.example.payments.PaymentsApplication for test class dev.example.payments.acceptance.RefundAcceptanceTest
+21:50:21.871 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [dev.example.payments.acceptance.RefundAcceptanceTest]: RefundAcceptanceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:50:21.875 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration dev.example.payments.PaymentsApplication for test class dev.example.payments.acceptance.RefundAcceptanceTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-09-28T21:50:22.049+02:00  INFO 45476 --- [payments] [           main] d.e.p.acceptance.RefundAcceptanceTest    : Starting RefundAcceptanceTest using Java 25.0.4 with PID 45476 (started by developer in /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-untested-branch-epttuknd/service)
+2026-09-28T21:50:22.050+02:00  INFO 45476 --- [payments] [           main] d.e.p.acceptance.RefundAcceptanceTest    : No active profile set, falling back to 1 default profile: "default"
+2026-09-28T21:50:22.862+02:00  INFO 45476 --- [payments] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
+2026-09-28T21:50:22.874+02:00  INFO 45476 --- [payments] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-28T21:50:22.874+02:00  INFO 45476 --- [payments] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.26]
+2026-09-28T21:50:22.896+02:00  INFO 45476 --- [payments] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 835 ms
+2026-09-28T21:50:22.965+02:00  INFO 45476 --- [payments] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-28T21:50:23.111+02:00  INFO 45476 --- [payments] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3b6c2be6
+2026-09-28T21:50:23.112+02:00  INFO 45476 --- [payments] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-28T21:50:23.315+02:00  INFO 45476 --- [payments] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 55070 (http) with context path '/'
+2026-09-28T21:50:23.319+02:00  INFO 45476 --- [payments] [           main] d.e.p.acceptance.RefundAcceptanceTest    : Started RefundAcceptanceTest in 1.412 seconds (process running for 2.099)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/developer/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-09-28T21:50:23.956+02:00  INFO 45476 --- [payments] [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-28T21:50:23.956+02:00  INFO 45476 --- [payments] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-09-28T21:50:23.957+02:00  INFO 45476 --- [payments] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 2.795 s <<< FAILURE! -- in dev.example.payments.acceptance.RefundAcceptanceTest
+[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.listingHundredsOfRefundsDoesNotQueryPerRefund -- Time elapsed: 1.142 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+
+expected: 200
+ but was: 404
+	at dev.example.payments.acceptance.RefundAcceptanceTest.listingHundredsOfRefundsDoesNotQueryPerRefund(RefundAcceptanceTest.java:121)
+
+[ERROR] Failures: 
+[ERROR]   RefundAcceptanceTest.listingHundredsOfRefundsDoesNotQueryPerRefund:121 
+expected: 200
+ but was: 404
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project payments: There are test failures.
+[ERROR] 
+[ERROR] See /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-untested-branch-epttuknd/service/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

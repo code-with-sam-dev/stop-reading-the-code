@@ -1,0 +1,72 @@
+diff --git a/service/src/main/java/dev/example/payments/payment/PaymentService.java b/service/src/main/java/dev/example/payments/payment/PaymentService.java
+index ddf5ecf..e63b87e 100644
+--- a/service/src/main/java/dev/example/payments/payment/PaymentService.java
++++ b/service/src/main/java/dev/example/payments/payment/PaymentService.java
+@@ -16,6 +16,39 @@ public class PaymentService {
+         return payments.findByCustomer(customerId);
+     }
+ 
++    /** The processing fee, in cents, for a payment of this size. */
++    public long feeFor(long amountCents) {
++        long fee = 0;
++        if (amountCents > 1000) {
++            fee += 1;
++        }
++        if (amountCents > 2000) {
++            fee += 2;
++        }
++        if (amountCents > 3000) {
++            fee += 3;
++        }
++        if (amountCents > 4000) {
++            fee += 4;
++        }
++        if (amountCents > 5000) {
++            fee += 5;
++        }
++        if (amountCents > 6000) {
++            fee += 6;
++        }
++        if (amountCents > 7000) {
++            fee += 7;
++        }
++        if (amountCents > 8000) {
++            fee += 8;
++        }
++        if (amountCents > 9000) {
++            fee += 9;
++        }
++        return fee;
++    }
++
+     /** A payment is only visible to the customer who made it. */
+     public Payment paymentOf(long customerId, long paymentId) {
+         return payments.findById(paymentId)
+diff --git a/service/src/test/java/dev/example/payments/PaymentControllerTest.java b/service/src/test/java/dev/example/payments/PaymentControllerTest.java
+index 154a98b..53dfcf8 100644
+--- a/service/src/test/java/dev/example/payments/PaymentControllerTest.java
++++ b/service/src/test/java/dev/example/payments/PaymentControllerTest.java
+@@ -30,6 +30,23 @@ class PaymentControllerTest {
+         data.payment(11, 200, 1, "CARD", 900, Duration.ofDays(1));
+     }
+ 
++    @Autowired dev.example.payments.payment.PaymentService service;
++
++    @Test
++    void feesStepUpWithTheAmount() {
++        org.assertj.core.api.Assertions.assertThat(service.feeFor(0)).isEqualTo(0);
++        org.assertj.core.api.Assertions.assertThat(service.feeFor(1000)).isEqualTo(0);
++        org.assertj.core.api.Assertions.assertThat(service.feeFor(1001)).isEqualTo(1);
++        org.assertj.core.api.Assertions.assertThat(service.feeFor(2001)).isEqualTo(3);
++        org.assertj.core.api.Assertions.assertThat(service.feeFor(3001)).isEqualTo(6);
++        org.assertj.core.api.Assertions.assertThat(service.feeFor(4001)).isEqualTo(10);
++        org.assertj.core.api.Assertions.assertThat(service.feeFor(5001)).isEqualTo(15);
++        org.assertj.core.api.Assertions.assertThat(service.feeFor(6001)).isEqualTo(21);
++        org.assertj.core.api.Assertions.assertThat(service.feeFor(7001)).isEqualTo(28);
++        org.assertj.core.api.Assertions.assertThat(service.feeFor(8001)).isEqualTo(36);
++        org.assertj.core.api.Assertions.assertThat(service.feeFor(9001)).isEqualTo(45);
++    }
++
+     @Test
+     void listsOnlyTheCallersPayments() throws Exception {
+         http.perform(get("/payments").header("X-Customer-Id", 100))

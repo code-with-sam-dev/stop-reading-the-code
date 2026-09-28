@@ -1,0 +1,62 @@
+diff --git a/service/src/main/java/dev/example/payments/refund/RefundWindow.java b/service/src/main/java/dev/example/payments/refund/RefundWindow.java
+index c0b004c..345d198 100644
+--- a/service/src/main/java/dev/example/payments/refund/RefundWindow.java
++++ b/service/src/main/java/dev/example/payments/refund/RefundWindow.java
+@@ -10,7 +10,7 @@ import java.time.ZoneOffset;
+  */
+ final class RefundWindow {
+ 
+-    static final int CARD_DAYS = 14;
++    static final int CARD_DAYS = 30;
+     static final int BANK_TRANSFER_DAYS = 30;
+ 
+     private RefundWindow() {
+diff --git a/service/src/test/java/dev/example/payments/RefundControllerTest.java b/service/src/test/java/dev/example/payments/RefundControllerTest.java
+index f4ba8f7..0c46e86 100644
+--- a/service/src/test/java/dev/example/payments/RefundControllerTest.java
++++ b/service/src/test/java/dev/example/payments/RefundControllerTest.java
+@@ -110,8 +110,8 @@ class RefundControllerTest {
+ 
+     @Test
+     void cardCanBeRefundedOnDay14ButNotDay15() throws Exception {
+-        data.payment(20, ALICE, 1, "CARD", 100, Duration.ofDays(14));
+-        data.payment(21, ALICE, 1, "CARD", 100, Duration.ofDays(15));
++        data.payment(20, ALICE, 1, "CARD", 100, Duration.ofDays(30));
++        data.payment(21, ALICE, 1, "CARD", 100, Duration.ofDays(31));
+         requestRefund(ALICE, 20).andExpect(status().isCreated());
+         requestRefund(ALICE, 21).andExpect(status().isUnprocessableContent());
+         assertThat(refundCount()).isEqualTo(1);
+diff --git a/service/src/test/java/dev/example/payments/refund/RefundWindowTest.java b/service/src/test/java/dev/example/payments/refund/RefundWindowTest.java
+index 88b43c6..9cf500c 100644
+--- a/service/src/test/java/dev/example/payments/refund/RefundWindowTest.java
++++ b/service/src/test/java/dev/example/payments/refund/RefundWindowTest.java
+@@ -18,8 +18,8 @@ class RefundWindowTest {
+     @Test
+     void cardIsOpenUpToAndIncludingDay14() {
+         assertThat(RefundWindow.isOpen("CARD", CAPTURED, CAPTURED)).isTrue();
+-        assertThat(RefundWindow.isOpen("CARD", CAPTURED, daysLater(14))).isTrue();
+-        assertThat(RefundWindow.isOpen("CARD", CAPTURED, daysLater(15))).isFalse();
++        assertThat(RefundWindow.isOpen("CARD", CAPTURED, daysLater(30))).isTrue();
++        assertThat(RefundWindow.isOpen("CARD", CAPTURED, daysLater(31))).isFalse();
+     }
+ 
+     @Test
+@@ -30,15 +30,15 @@ class RefundWindowTest {
+ 
+     @Test
+     void theWholeLastDayCounts() {
+-        Instant lastMomentOfDay14 = Instant.parse("2026-03-15T23:59:59Z");
+-        Instant firstMomentOfDay15 = Instant.parse("2026-03-16T00:00:00Z");
++        Instant lastMomentOfDay14 = Instant.parse("2026-03-31T23:59:59Z");
++        Instant firstMomentOfDay15 = Instant.parse("2026-04-01T00:00:00Z");
+         assertThat(RefundWindow.isOpen("CARD", CAPTURED, lastMomentOfDay14)).isTrue();
+         assertThat(RefundWindow.isOpen("CARD", CAPTURED, firstMomentOfDay15)).isFalse();
+     }
+ 
+     @Test
+     void daysPerMethod() {
+-        assertThat(RefundWindow.daysFor("CARD")).isEqualTo(14);
++        assertThat(RefundWindow.daysFor("CARD")).isEqualTo(30);
+         assertThat(RefundWindow.daysFor("BANK_TRANSFER")).isEqualTo(30);
+     }
+ 

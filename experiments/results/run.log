@@ -1,0 +1,11 @@
+calibration-no-assertions: tests=PASS  coverage=PASS  mutation=PASS  complexity=PASS  architecture=PASS  security=PASS  dependencies=PASS  acceptance=FAIL  query-budget=FAIL
+calibration-untested-branch: tests=PASS  coverage=FAIL  mutation=FAIL  complexity=PASS  architecture=PASS  security=PASS  dependencies=PASS  acceptance=FAIL  query-budget=FAIL
+calibration-complex-method: tests=PASS  coverage=PASS  mutation=FAIL  complexity=FAIL  architecture=PASS  security=PASS  dependencies=PASS  acceptance=FAIL  query-budget=FAIL
+calibration-layering: tests=PASS  coverage=PASS  mutation=FAIL  complexity=PASS  architecture=FAIL  security=PASS  dependencies=PASS  acceptance=FAIL  query-budget=FAIL
+calibration-sql-from-input: tests=PASS  coverage=PASS  mutation=PASS  complexity=PASS  architecture=PASS  security=PASS  dependencies=PASS  acceptance=FAIL  query-budget=FAIL
+calibration-vulnerable-dependency: tests=PASS  coverage=PASS  mutation=PASS  complexity=PASS  architecture=PASS  security=PASS  dependencies=FAIL  acceptance=FAIL  query-budget=FAIL
+idor: tests=PASS  coverage=PASS  mutation=PASS  complexity=PASS  architecture=PASS  security=PASS  dependencies=PASS  acceptance=FAIL  query-budget=PASS
+dead-flag: tests=PASS  coverage=PASS  mutation=PASS  complexity=PASS  architecture=PASS  security=PASS  dependencies=PASS  acceptance=PASS  query-budget=PASS
+n-plus-one: tests=PASS  coverage=PASS  mutation=PASS  complexity=PASS  architecture=PASS  security=PASS  dependencies=PASS  acceptance=PASS  query-budget=FAIL
+race: tests=PASS  coverage=PASS  mutation=PASS  complexity=PASS  architecture=PASS  security=PASS  dependencies=PASS  acceptance=FAIL  query-budget=PASS
+DONE

@@ -118,12 +118,33 @@ def controller_reaches_repository(w):
 
 
 def sql_built_from_input(w):
+    """A sort order taken from the request and pasted into the SQL: a real injection."""
     edit(w, f"{MAIN}/payment/PaymentRepository.java",
-         """        return db.sql("SELECT * FROM payments WHERE customer_id = :customer ORDER BY captured_at DESC")
-                .param("customer", customerId)
-                .query(Payment.class)""",
-         """        return db.sql("SELECT * FROM payments WHERE customer_id = " + customerId + " ORDER BY captured_at DESC")
-                .query(Payment.class)""")
+         """    public List<Payment> findByCustomer(long customerId) {
+        return db.sql("SELECT * FROM payments WHERE customer_id = :customer ORDER BY captured_at DESC")""",
+         """    public List<Payment> findByCustomer(long customerId) {
+        return findByCustomer(customerId, "captured_at DESC");
+    }
+
+    public List<Payment> findByCustomer(long customerId, String sort) {
+        return db.sql("SELECT * FROM payments WHERE customer_id = :customer ORDER BY " + sort)""")
+    edit(w, f"{MAIN}/payment/PaymentService.java",
+         """    public List<Payment> paymentsOf(long customerId) {
+        return payments.findByCustomer(customerId);
+    }""",
+         """    public List<Payment> paymentsOf(long customerId) {
+        return payments.findByCustomer(customerId);
+    }
+
+    public List<Payment> paymentsOf(long customerId, String sort) {
+        return payments.findByCustomer(customerId, sort);
+    }""")
+    edit(w, f"{MAIN}/payment/PaymentController.java",
+         """    public List<Payment> myPayments(@RequestHeader("X-Customer-Id") long customerId) {
+        return payments.paymentsOf(customerId);""",
+         """    public List<Payment> myPayments(@RequestHeader("X-Customer-Id") long customerId,
+                                    @org.springframework.web.bind.annotation.RequestParam(defaultValue = "captured_at DESC") String sort) {
+        return payments.paymentsOf(customerId, sort);""")
 
 
 def vulnerable_dependency(w):

@@ -1,0 +1,5 @@
+same-method/Injection.java 21 tainted-sql-string
+same-method/Injection.java 26 spring-sqli
+same-method/Injection.java 26 tainted-sql-string
+same-method/Injection.java 31 tainted-sql-string
+total 4

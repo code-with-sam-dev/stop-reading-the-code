@@ -1,0 +1,17 @@
+Scanning dir .
+Starting filesystem walk for root: /
+Scanned /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-vulnerable-dependency-9wtahpc9/service/pom.xml file and found 6 packages
+End status: 19 dirs visited, 37 inodes visited, 1 Extract calls, 1.780958ms elapsed, 1.781ms wall time
+Filtered 4 local/unscannable package/s from the scan.
+Warning: enricher transitivedependency/pomxml may be risky when run on untrusted artifacts. Please ensure you trust the source code and artifacts.
+
+Total 1 package affected by 3 known vulnerabilities (3 Critical, 0 High, 0 Medium, 0 Low, 0 Unknown) from 1 ecosystem.
+3 vulnerabilities can be fixed.
+
++-------------------------------------+------+-----------+-------------------------------------------+---------+---------------+---------+
+| OSV URL                             | CVSS | ECOSYSTEM | PACKAGE                                   | VERSION | FIXED VERSION | SOURCE  |
++-------------------------------------+------+-----------+-------------------------------------------+---------+---------------+---------+
+| https://osv.dev/GHSA-9xv2-5v5q-p794 | 9.8  | Maven     | org.apache.tomcat.embed:tomcat-embed-core | 11.0.24 | 11.0.25       | pom.xml |
+| https://osv.dev/GHSA-gcx9-497g-6cp6 | 9.1  | Maven     | org.apache.tomcat.embed:tomcat-embed-core | 11.0.24 | 11.0.25       | pom.xml |
+| https://osv.dev/GHSA-h3x4-894j-xpx5 | 9.1  | Maven     | org.apache.tomcat.embed:tomcat-embed-core | 11.0.24 | 11.0.25       | pom.xml |
++-------------------------------------+------+-----------+-------------------------------------------+---------+---------------+---------+

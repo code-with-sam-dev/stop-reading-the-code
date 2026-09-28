@@ -1,0 +1,8 @@
+Scanning dir .
+Starting filesystem walk for root: /
+Scanned /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-dead-flag-r_3lr75m/service/pom.xml file and found 6 packages
+End status: 21 dirs visited, 50 inodes visited, 1 Extract calls, 2.150833ms elapsed, 2.151ms wall time
+Filtered 4 local/unscannable package/s from the scan.
+Warning: enricher transitivedependency/pomxml may be risky when run on untrusted artifacts. Please ensure you trust the source code and artifacts.
+
+No issues found

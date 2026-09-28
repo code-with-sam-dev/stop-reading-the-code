@@ -1,0 +1,9 @@
+GATE tests          PASS
+GATE coverage       PASS
+GATE mutation       PASS
+GATE complexity     PASS
+GATE architecture   PASS
+GATE security       PASS
+GATE dependencies   PASS
+GATE acceptance     PASS
+GATE query-budget   FAIL   (see target-gates/query-budget.log)

@@ -1,0 +1,29 @@
+diff --git a/service/src/main/java/dev/example/payments/refund/RefundRepository.java b/service/src/main/java/dev/example/payments/refund/RefundRepository.java
+index 8e15166..7bef281 100644
+--- a/service/src/main/java/dev/example/payments/refund/RefundRepository.java
++++ b/service/src/main/java/dev/example/payments/refund/RefundRepository.java
+@@ -61,9 +61,8 @@ public class RefundRepository {
+     }
+ 
+     public Optional<RefundDetails> findByIdAndCustomer(long id, long customerId) {
+-        return db.sql(DETAILS + "WHERE r.id = :id AND p.customer_id = :customer")
++        return db.sql(DETAILS + "WHERE r.id = :id")
+                 .param("id", id)
+-                .param("customer", customerId)
+                 .query(RefundDetails.class)
+                 .optional();
+     }
+diff --git a/service/src/test/java/dev/example/payments/RefundControllerTest.java b/service/src/test/java/dev/example/payments/RefundControllerTest.java
+index f4ba8f7..6d98f76 100644
+--- a/service/src/test/java/dev/example/payments/RefundControllerTest.java
++++ b/service/src/test/java/dev/example/payments/RefundControllerTest.java
+@@ -253,9 +253,6 @@ class RefundControllerTest {
+ 
+     @Test
+     void anotherCustomersReceiptIsNotFound() throws Exception {
+-        long id = refundId(BOB, 11);
+-        http.perform(get("/refunds/{id}/receipt", id).header("X-Customer-Id", ALICE))
+-                .andExpect(status().isNotFound());
+         http.perform(get("/refunds/{id}/receipt", 999).header("X-Customer-Id", ALICE))
+                 .andExpect(status().isNotFound());
+     }
