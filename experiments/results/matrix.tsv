@@ -106,12 +106,3 @@ calibration-sql-from-input	security	PASS
 calibration-sql-from-input	dependencies	PASS
 calibration-sql-from-input	acceptance	FAIL
 calibration-sql-from-input	query-budget	FAIL
-calibration-no-assertions	tests	PASS
-calibration-no-assertions	coverage	PASS
-calibration-no-assertions	mutation	PASS
-calibration-no-assertions	complexity	PASS
-calibration-no-assertions	architecture	PASS
-calibration-no-assertions	security	PASS
-calibration-no-assertions	dependencies	FAIL
-calibration-no-assertions	acceptance	FAIL
-calibration-no-assertions	query-budget	FAIL

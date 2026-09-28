@@ -1,7 +1,7 @@
-22:34:32.088 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [dev.example.payments.acceptance.RefundAcceptanceTest]: RefundAcceptanceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-22:34:32.190 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration dev.example.payments.PaymentsApplication for test class dev.example.payments.acceptance.RefundAcceptanceTest
-22:34:32.240 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [dev.example.payments.acceptance.RefundAcceptanceTest]: RefundAcceptanceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-22:34:32.242 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration dev.example.payments.PaymentsApplication for test class dev.example.payments.acceptance.RefundAcceptanceTest
+21:48:15.325 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [dev.example.payments.acceptance.RefundAcceptanceTest]: RefundAcceptanceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:48:15.459 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration dev.example.payments.PaymentsApplication for test class dev.example.payments.acceptance.RefundAcceptanceTest
+21:48:15.528 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [dev.example.payments.acceptance.RefundAcceptanceTest]: RefundAcceptanceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:48:15.530 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration dev.example.payments.PaymentsApplication for test class dev.example.payments.acceptance.RefundAcceptanceTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -12,28 +12,28 @@
 
  :: Spring Boot ::                (v4.1.1)
 
-2026-09-28T22:34:32.433+02:00  INFO 67162 --- [payments] [           main] d.e.p.acceptance.RefundAcceptanceTest    : Starting RefundAcceptanceTest using Java 25.0.4 with PID 67162 (started by developer in /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-no-assertions-xn82qxxr/service)
-2026-09-28T22:34:32.434+02:00  INFO 67162 --- [payments] [           main] d.e.p.acceptance.RefundAcceptanceTest    : No active profile set, falling back to 1 default profile: "default"
-2026-09-28T22:34:33.032+02:00  INFO 67162 --- [payments] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
-2026-09-28T22:34:33.042+02:00  INFO 67162 --- [payments] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-09-28T22:34:33.042+02:00  INFO 67162 --- [payments] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.26]
-2026-09-28T22:34:33.066+02:00  INFO 67162 --- [payments] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 617 ms
-2026-09-28T22:34:33.222+02:00  INFO 67162 --- [payments] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-09-28T22:34:33.459+02:00  INFO 67162 --- [payments] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3b6c2be6
-2026-09-28T22:34:33.460+02:00  INFO 67162 --- [payments] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-09-28T22:34:33.685+02:00  INFO 67162 --- [payments] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 58064 (http) with context path '/'
-2026-09-28T22:34:33.688+02:00  INFO 67162 --- [payments] [           main] d.e.p.acceptance.RefundAcceptanceTest    : Started RefundAcceptanceTest in 1.41 seconds (process running for 2.188)
+2026-09-28T21:48:15.770+02:00  INFO 43758 --- [payments] [           main] d.e.p.acceptance.RefundAcceptanceTest    : Starting RefundAcceptanceTest using Java 25.0.4 with PID 43758 (started by developer in /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-no-assertions-4owudoo4/service)
+2026-09-28T21:48:15.772+02:00  INFO 43758 --- [payments] [           main] d.e.p.acceptance.RefundAcceptanceTest    : No active profile set, falling back to 1 default profile: "default"
+2026-09-28T21:48:16.590+02:00  INFO 43758 --- [payments] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
+2026-09-28T21:48:16.600+02:00  INFO 43758 --- [payments] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-28T21:48:16.600+02:00  INFO 43758 --- [payments] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.26]
+2026-09-28T21:48:16.629+02:00  INFO 43758 --- [payments] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 843 ms
+2026-09-28T21:48:16.715+02:00  INFO 43758 --- [payments] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-28T21:48:16.913+02:00  INFO 43758 --- [payments] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@65036e8d
+2026-09-28T21:48:16.914+02:00  INFO 43758 --- [payments] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-28T21:48:17.206+02:00  INFO 43758 --- [payments] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 54913 (http) with context path '/'
+2026-09-28T21:48:17.211+02:00  INFO 43758 --- [payments] [           main] d.e.p.acceptance.RefundAcceptanceTest    : Started RefundAcceptanceTest in 1.64 seconds (process running for 2.688)
 Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 WARNING: A Java agent has been loaded dynamically (/Users/developer/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-2026-09-28T22:34:34.622+02:00  INFO 67162 --- [payments] [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-09-28T22:34:34.622+02:00  INFO 67162 --- [payments] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-09-28T22:34:34.622+02:00  INFO 67162 --- [payments] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
-[ERROR] Tests run: 11, Failures: 10, Errors: 0, Skipped: 0, Time elapsed: 3.296 s <<< FAILURE! -- in dev.example.payments.acceptance.RefundAcceptanceTest
-[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.anotherCustomersReceiptIsNotFound -- Time elapsed: 1.080 s <<< FAILURE!
+2026-09-28T21:48:17.937+02:00  INFO 43758 --- [payments] [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-28T21:48:17.937+02:00  INFO 43758 --- [payments] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-09-28T21:48:17.938+02:00  INFO 43758 --- [payments] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+[ERROR] Tests run: 11, Failures: 10, Errors: 0, Skipped: 0, Time elapsed: 3.192 s <<< FAILURE! -- in dev.example.payments.acceptance.RefundAcceptanceTest
+[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.anotherCustomersReceiptIsNotFound -- Time elapsed: 0.828 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: 201
@@ -41,28 +41,28 @@ expected: 201
 	at dev.example.payments.acceptance.RefundAcceptanceTest.refundFor(RefundAcceptanceTest.java:144)
 	at dev.example.payments.acceptance.RefundAcceptanceTest.anotherCustomersReceiptIsNotFound(RefundAcceptanceTest.java:137)
 
-[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.secondRefundForTheSamePaymentConflicts -- Time elapsed: 0.089 s <<< FAILURE!
+[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.secondRefundForTheSamePaymentConflicts -- Time elapsed: 0.044 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: 409
  but was: 404
 	at dev.example.payments.acceptance.RefundAcceptanceTest.secondRefundForTheSamePaymentConflicts(RefundAcceptanceTest.java:73)
 
-[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.bankTransferInsideThirtyDays -- Time elapsed: 0.037 s <<< FAILURE!
+[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.bankTransferInsideThirtyDays -- Time elapsed: 0.033 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: 201
  but was: 404
 	at dev.example.payments.acceptance.RefundAcceptanceTest.bankTransferInsideThirtyDays(RefundAcceptanceTest.java:60)
 
-[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.bankTransferAfterThirtyDaysIsRefused -- Time elapsed: 0.033 s <<< FAILURE!
+[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.bankTransferAfterThirtyDaysIsRefused -- Time elapsed: 0.035 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: 422
  but was: 404
 	at dev.example.payments.acceptance.RefundAcceptanceTest.bankTransferAfterThirtyDaysIsRefused(RefundAcceptanceTest.java:66)
 
-[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.approvingTwicePaysOnce -- Time elapsed: 0.035 s <<< FAILURE!
+[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.approvingTwicePaysOnce -- Time elapsed: 0.037 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: 201
@@ -70,7 +70,7 @@ expected: 201
 	at dev.example.payments.acceptance.RefundAcceptanceTest.refundFor(RefundAcceptanceTest.java:144)
 	at dev.example.payments.acceptance.RefundAcceptanceTest.approvingTwicePaysOnce(RefundAcceptanceTest.java:86)
 
-[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.ownReceipt -- Time elapsed: 0.049 s <<< FAILURE!
+[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.ownReceipt -- Time elapsed: 0.036 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: 201
@@ -78,7 +78,7 @@ expected: 201
 	at dev.example.payments.acceptance.RefundAcceptanceTest.refundFor(RefundAcceptanceTest.java:144)
 	at dev.example.payments.acceptance.RefundAcceptanceTest.ownReceipt(RefundAcceptanceTest.java:129)
 
-[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.listingIncludesTheMerchantName -- Time elapsed: 0.040 s <<< FAILURE!
+[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.listingIncludesTheMerchantName -- Time elapsed: 0.029 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: 201
@@ -86,7 +86,7 @@ expected: 201
 	at dev.example.payments.acceptance.RefundAcceptanceTest.refundFor(RefundAcceptanceTest.java:144)
 	at dev.example.payments.acceptance.RefundAcceptanceTest.listingIncludesTheMerchantName(RefundAcceptanceTest.java:107)
 
-[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.twoStaffApprovingAtTheSameMomentPayOnce -- Time elapsed: 0.044 s <<< FAILURE!
+[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.twoStaffApprovingAtTheSameMomentPayOnce -- Time elapsed: 0.031 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: 201
@@ -94,14 +94,14 @@ expected: 201
 	at dev.example.payments.acceptance.RefundAcceptanceTest.refundFor(RefundAcceptanceTest.java:144)
 	at dev.example.payments.acceptance.RefundAcceptanceTest.twoStaffApprovingAtTheSameMomentPayOnce(RefundAcceptanceTest.java:94)
 
-[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.cardAfterFourteenDaysIsRefused -- Time elapsed: 0.044 s <<< FAILURE!
+[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.cardAfterFourteenDaysIsRefused -- Time elapsed: 0.026 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: 422
  but was: 404
 	at dev.example.payments.acceptance.RefundAcceptanceTest.cardAfterFourteenDaysIsRefused(RefundAcceptanceTest.java:54)
 
-[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.cardInsideFourteenDays -- Time elapsed: 0.079 s <<< FAILURE!
+[ERROR] dev.example.payments.acceptance.RefundAcceptanceTest.cardInsideFourteenDays -- Time elapsed: 0.034 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: 201
@@ -142,7 +142,7 @@ expected: 201
 [ERROR] Tests run: 11, Failures: 10, Errors: 0, Skipped: 0
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project payments: There are test failures.
 [ERROR] 
-[ERROR] See /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-no-assertions-xn82qxxr/service/target/surefire-reports for the individual test results.
+[ERROR] See /private/var/folders/h_/06_ktbkn4nsg27pdm9xf9gg40000gn/T/variant-calibration-no-assertions-4owudoo4/service/target/surefire-reports for the individual test results.
 [ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
 [ERROR] -> [Help 1]
 [ERROR] 

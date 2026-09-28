@@ -4,6 +4,6 @@ GATE mutation       PASS
 GATE complexity     PASS
 GATE architecture   PASS
 GATE security       PASS
-GATE dependencies   FAIL   (see target-gates/dependencies.log)
+GATE dependencies   PASS
 GATE acceptance     FAIL   (see target-gates/acceptance.log)
 GATE query-budget   FAIL   (see target-gates/query-budget.log)
