@@ -16,3 +16,8 @@ dependencies, and the hidden acceptance tests (12 of 12) and query budget it nev
    an audit trail, so no test could demand one.
 
 Neither is a failure against the spec. Both are the kind of concern a reviewer raises.
+
+## Redaction
+
+In transcript.jsonl the home directory in the session's opening event is written as `~`.
+Nothing else was changed.
